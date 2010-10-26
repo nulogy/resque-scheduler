@@ -4,16 +4,16 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{brianjlandau-resque-scheduler}
+  s.name = %q{sskirby-resque-scheduler}
   s.version = "1.10.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Ben VandenBos", "Brian Landau"]
-  s.date = %q{2010-10-21}
+  s.authors = ["Ben VandenBos", "Brian Landau", "Sean Kirby", "Tanzeeb Khalili"]
+  s.date = %q{2010-10-26}
   s.description = %q{Light weight job scheduling on top of Resque.
   Adds methods enqueue_at/enqueue_in to schedule jobs in the future.
   Also supports queueing jobs on a fixed, cron-like schedule.}
-  s.email = %q{brianjlandau@gmail.com}
+  s.email = %q{sskirby@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.markdown"
@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.markdown",
      "Rakefile",
-     "brianjlandau-resque-scheduler.gemspec",
      "lib/resque/scheduler.rb",
      "lib/resque_scheduler.rb",
      "lib/resque_scheduler/server.rb",
@@ -33,6 +32,7 @@ Gem::Specification.new do |s|
      "lib/resque_scheduler/server/views/scheduler.erb",
      "lib/resque_scheduler/tasks.rb",
      "lib/resque_scheduler/version.rb",
+     "sskirby-resque-scheduler.gemspec",
      "tasks/resque_scheduler.rake",
      "test/delayed_queue_test.rb",
      "test/redis-test.conf",
@@ -40,23 +40,23 @@ Gem::Specification.new do |s|
      "test/scheduler_test.rb",
      "test/test_helper.rb"
   ]
-  s.homepage = %q{http://github.com/brianjlandau/resque-scheduler}
+  s.homepage = %q{http://github.com/sskirby/resque-scheduler}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Light weight job scheduling on top of Resque}
   s.test_files = [
-    "test/delayed_queue_test.rb",
+    "test/scheduler_test.rb",
+     "test/test_helper.rb",
      "test/resque-web_test.rb",
-     "test/scheduler_test.rb",
-     "test/test_helper.rb"
+     "test/delayed_queue_test.rb"
   ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<redis>, [">= 2.0.1"])
       s.add_runtime_dependency(%q<resque>, [">= 1.8.0"])
       s.add_runtime_dependency(%q<rufus-scheduler>, [">= 0"])
