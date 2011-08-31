@@ -18,6 +18,8 @@ module ResqueScheduler
   #
   # :name can be anything and is used only to describe the scheduled job
   # :cron can be any cron scheduling string :job can be any resque job class
+  # :every can be used in lieu of :cron. see rufus-scheduler's 'every' usage for 
+  #   valid syntax. If :cron is present it will take precedence over :every.
   # :class must be a resque worker class
   # :args can be any yaml which will be converted to a ruby literal and passed
   #   in a params. (optional)
@@ -26,6 +28,11 @@ module ResqueScheduler
   #   an array, each element in the array is passed as a separate param,
   #   otherwise params is passed in as the only parameter to perform.
   def schedule=(schedule_hash)
+    if Resque::Scheduler.dynamic
+      schedule_hash.each do |name, job_spec|
+        set_schedule(name, job_spec)
+      end
+    end
     @schedule = schedule_hash
   end
 
@@ -54,7 +61,12 @@ module ResqueScheduler
   
   # create or update a schedule with the provided name and configuration
   def set_schedule(name, config)
-    redis.hset(:schedules, name, encode(config))
+    existing_config = get_schedule(name)
+    unless existing_config && existing_config == config
+      redis.hset(:schedules, name, encode(config))
+      redis.sadd(:schedules_changed, name)
+    end
+    config
   end
   
   # retrive the schedule configuration for the given name
@@ -65,6 +77,7 @@ module ResqueScheduler
   # remove a given schedule by name
   def remove_schedule(name)
     redis.hdel(:schedules, name)
+    redis.sadd(:schedules_changed, name)
   end
 
   # This method is nearly identical to +enqueue+ only it also
@@ -122,8 +135,8 @@ module ResqueScheduler
 
   # Returns the next delayed queue timestamp
   # (don't call directly)
-  def next_delayed_timestamp
-    items = redis.zrangebyscore :delayed_queue_schedule, '-inf', Time.now.to_i, :limit => [0, 1]
+  def next_delayed_timestamp(at_time=nil)
+    items = redis.zrangebyscore :delayed_queue_schedule, '-inf', (at_time || Time.now).to_i, :limit => [0, 1]
     timestamp = items.nil? ? nil : Array(items).first
     timestamp.to_i unless timestamp.nil?
   end
