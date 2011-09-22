@@ -38,7 +38,7 @@ begin
 
     gemspec.add_dependency "redis", ">= 2.0.1"
     gemspec.add_dependency "resque", ">= 1.8.0"
-    gemspec.add_dependency "tanzeeb-rufus-scheduler"
+    gemspec.add_dependency "rufus-scheduler"
     gemspec.add_development_dependency "jeweler"
     gemspec.add_development_dependency "mocha"
     gemspec.add_development_dependency "rack-test"
