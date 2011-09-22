@@ -174,6 +174,7 @@ module Resque
           def @rufus_scheduler.handle_exception(job, exception)
             puts "Exception caught, notifying Airbrake"
             id = Airbrake.notify(exception)
+            puts "Airbrake id: #{id}"
           end
         end
         @rufus_scheduler
