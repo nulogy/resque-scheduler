@@ -1,5 +1,5 @@
 require 'rufus/scheduler'
-require 'rufus/exception_handlers/airbrake'
+require 'airbrake'
 require 'thwait'
 
 module Resque
@@ -169,9 +169,13 @@ module Resque
       end
 
       def rufus_scheduler
-        rufus_options = {}
-        rufus_options = {:exception_handler => Rufus::ExceptionHandlers::Airbrake.new} if self.airbrake
-        @rufus_scheduler ||= Rufus::Scheduler.start_new rufus_options
+        @rufus_scheduler ||= Rufus::Scheduler.start_new
+        if self.airbrake
+          def @rufus_scheduler.handle_exception(job, exception)
+            puts "Exception caught, notifying Airbrake"
+            id = Airbrake.notify(exception)
+          end
+        end
       end
 
       # Stops old rufus scheduler and creates a new one.  Returns the new
