@@ -236,10 +236,10 @@ class Resque::SchedulerTest < Test::Unit::TestCase
     end
   end
   
-  def test_uses_rufus_airbrake_handler
-    Resque::Scheduler.airbrake = true
-    Resque::Scheduler.clear_schedule!
+  #def test_uses_rufus_airbrake_handler
+    #Resque::Scheduler.airbrake = true
+    #Resque::Scheduler.clear_schedule!
 
-    assert_equal 'Rufus::ExceptionHandlers::Airbrake', Resque::Scheduler.rufus_scheduler.instance_variable_get(:'@exception_handler').class.name
-  end
+    #assert_equal 'Rufus::ExceptionHandlers::Airbrake', Resque::Scheduler.rufus_scheduler.instance_variable_get(:'@exception_handler').class.name
+  #end
 end

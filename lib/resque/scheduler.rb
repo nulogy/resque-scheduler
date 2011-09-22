@@ -176,6 +176,7 @@ module Resque
             id = Airbrake.notify(exception)
           end
         end
+        @rufus_scheduler
       end
 
       # Stops old rufus scheduler and creates a new one.  Returns the new
