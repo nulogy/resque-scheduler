@@ -1,4 +1,5 @@
 require 'rufus/scheduler'
+require 'airbrake'
 require 'thwait'
 
 module Resque
@@ -17,6 +18,9 @@ module Resque
       
       # If set, will try to update the schulde in the loop
       attr_accessor :dynamic
+
+      # If set, will tell rufus to use the airbrake exception handler
+      attr_accessor :airbrake
       
       # the Rufus::Scheduler jobs that are scheduled
       def scheduled_jobs
@@ -166,6 +170,14 @@ module Resque
 
       def rufus_scheduler
         @rufus_scheduler ||= Rufus::Scheduler.start_new
+        if self.airbrake
+          def @rufus_scheduler.handle_exception(job, exception)
+            puts "Exception caught, notifying Airbrake"
+            id = Airbrake.notify(exception)
+            puts "Airbrake id: #{id}"
+          end
+        end
+        @rufus_scheduler
       end
 
       # Stops old rufus scheduler and creates a new one.  Returns the new

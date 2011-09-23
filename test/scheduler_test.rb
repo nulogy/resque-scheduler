@@ -235,5 +235,23 @@ class Resque::SchedulerTest < Test::Unit::TestCase
       Resque::Plugin.lint(ResqueScheduler)
     end
   end
+  
+  def test_uses_rufus_airbrake_handler
+    backup_stdout = $stdout
+    begin
+      e = RuntimeError.new("Problem!")
+      Airbrake.expects(:notify).with(e)
 
+      Resque::Scheduler.airbrake = true
+      Resque::Scheduler.clear_schedule!
+      
+      $stdout = StringIO.new #swallow up the output from the exception handler
+
+      # #handle_exception takes a job, but our custom handler doesn't care about it, so we're
+      # just going to pass nil for the test
+      Resque::Scheduler.rufus_scheduler.handle_exception(nil, e)
+    ensure
+      $stdout = backup_stdout
+    end
+  end
 end
