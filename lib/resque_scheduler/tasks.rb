@@ -10,14 +10,14 @@ namespace :resque do
     require 'resque_scheduler'
 
     Resque::Scheduler.verbose = true if ENV['VERBOSE']
-    if ENV['RESQUE_SCHEDULER_AIRBRAKE']
+    if File.exists?("config/airbrake.yml")
+      Resque::Scheduler.airbrake = true 
       Airbrake::configure do |config|
-        yaml = YAML.load_file(ENV['RESQUE_SCHEDULER_AIRBRAKE'])
+        yaml = YAML.load_file("config/airbrake.yml")
         yaml.each do |key, val|
           config.send(:"#{key}=", val)
         end
       end
-      Resque::Scheduler.airbrake = true 
     end
     Resque::Scheduler.run
   end
