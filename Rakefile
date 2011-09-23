@@ -33,7 +33,7 @@ begin
   Also supports queueing jobs on a fixed, cron-like schedule.}
     gemspec.email = "sskirby@gmail.com"
     gemspec.homepage = "http://github.com/sskirby/resque-scheduler"
-    gemspec.authors = ["Ben VandenBos", "Brian Landau", "Sean Kirby", "Tanzeeb Khalili"]
+    gemspec.authors = ["Ben VandenBos", "Brian Landau", "Sean Kirby", "Tanzeeb Khalili", "Justin Fitzsimmons"]
     gemspec.version = ResqueScheduler::Version
 
     gemspec.add_dependency "redis", ">= 2.0.1"
